@@ -44,15 +44,6 @@ public class WikiList {
         this.covered = covered;
     }
 
-    public WikiList getWikiList(String article){
-        for (WikiList wikiList : wikiLists){
-            if (wikiList.getArticle().equals(article)) {
-                return wikiList;
-            }
-        }
-        return null;
-    }
-
     public ArrayList<String> getRoute(){
         return (ArrayList<String>) route.clone();
     }

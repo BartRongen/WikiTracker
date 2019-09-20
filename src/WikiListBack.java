@@ -49,16 +49,7 @@ public class WikiListBack {
         return routeReverse;
     }
 
-    public void setCovered(ArrayList<String> covered){
+    private void setCovered(ArrayList<String> covered){
         this.covered = covered;
-    }
-
-    public WikiListBack getWikiList(String article){
-        for (WikiListBack wikiList : wikiLists){
-            if (wikiList.getArticle().equals(article)) {
-                return wikiList;
-            }
-        }
-        return null;
     }
 }

@@ -27,23 +27,21 @@ public class WikiTracker {
 
     public void getRoute() throws IOException {
         long start = System.currentTimeMillis();
-        ArrayList<String> route;
         ArrayList<ArrayList<String>> routes = new ArrayList<>();
         routes = findRoutes(currentLists, currentBackLists);
-        int fronthops = 0;
-        int backhops = 0;
+        int frontHops = 0;
+        int backHops = 0;
         int progress = 1;
         boolean frontRead = true;
 
         ArrayList<WikiList> nextFrontList;
         ArrayList<WikiListBack> nextBackList;
 
-        //while (route == null){
         while (routes.size() == 0){
             if (frontRead) {
                 nextFrontList = new ArrayList<>();
                 for (WikiList wikiList : currentLists) {
-                    System.out.println("FrontList: hops: " + fronthops + ", progress: " + progress + "/" + currentLists.size() + ", linked from: " + wikiList.linkedFrom() + ", API calling for: " + wikiList.getArticle());
+                    System.out.println("FrontList: hops: " + frontHops + ", progress: " + progress + "/" + currentLists.size() + ", linked from: " + wikiList.linkedFrom() + ", API calling for: " + wikiList.getArticle());
                     ArrayList<String> links = WikiAPI.getLinks(wikiList.getArticle());
                     progress++;
                     ArrayList<WikiList> newList = wikiList.addLinks(links);
@@ -57,7 +55,7 @@ public class WikiTracker {
                 }
                 currentLists.clear();
                 currentLists.addAll(nextFrontList);
-                fronthops++;
+                frontHops++;
                 progress = 1;
 
                 routes = findRoutes(currentLists, currentBackLists);
@@ -65,12 +63,13 @@ public class WikiTracker {
             } else {
                 nextBackList = new ArrayList<>();
                 for (WikiListBack backList : currentBackLists){
-                    System.out.println("BackList: hops: " + backhops + ", progress: " + progress + "/" + currentBackLists.size() + ", linked from: " + backList.linkedFrom() + ", API calling for: " + backList.getArticle());
+                    System.out.println("BackList: hops: " + backHops + ", progress: " + progress + "/" + currentBackLists.size() + ", linked from: " + backList.linkedFrom() + ", API calling for: " + backList.getArticle());
                     ArrayList<String> links = WikiAPI.getLinksHere(backList.getArticle());
                     progress++;
                     ArrayList<WikiListBack> newList = backList.addLinks(links);
                     nextBackList.addAll(newList);
 
+                    //check if we've already found a path
                     routes = findRoutes(currentLists, newList);
                     if (routes.size() > 0) {
                         break;
@@ -78,7 +77,7 @@ public class WikiTracker {
                 }
                 currentBackLists.clear();
                 currentBackLists.addAll(nextBackList);
-                backhops++;
+                backHops++;
                 progress = 1;
                 routes = findRoutes(currentLists, currentBackLists);
                 frontRead = true;
@@ -105,7 +104,7 @@ public class WikiTracker {
     }
 
 
-    public ArrayList<ArrayList<String>> findRoutes(ArrayList<WikiList> wikiLists, ArrayList<WikiListBack> backLists){
+    private ArrayList<ArrayList<String>> findRoutes(ArrayList<WikiList> wikiLists, ArrayList<WikiListBack> backLists){
         ArrayList<ArrayList<String>> routes = new ArrayList<>();
         for (WikiList wikiList : wikiLists){
             for (WikiListBack backList: backLists){

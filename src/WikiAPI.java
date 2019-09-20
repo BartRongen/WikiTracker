@@ -10,10 +10,6 @@ import java.util.ArrayList;
 
 public class WikiAPI {
 
-    public WikiAPI(){
-
-    }
-
     public static ArrayList<String> getLinks(String article) throws IOException {
         String url = "https://en.wikipedia.org/w/api.php?action=query&prop=links&titles=" + article + "&pllimit=500&format=json";
         URL urlForGetRequest = new URL(url);
